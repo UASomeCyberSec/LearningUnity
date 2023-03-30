@@ -6,27 +6,30 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject diver;
-    public event Action OnExit;
+    private Animator anim;
+    private bool isOnBoard = false;
 
-    private AnimationEventHandler eventHandler;
-
-    private void Exit()
+    void Awake()
     {
-        OnExit?.Invoke();
+        anim = diver.GetComponent<Animator>();
     }
 
-    private void Awake()
+    void Update()
     {
-        eventHandler = diver.GetComponent<AnimationEventHandler>();
+        AnimationHandler();
     }
 
-    private void OnEnable()
+    private void AnimationHandler()
     {
-        eventHandler.OnFinish += Exit;
-    }
-
-    private void OnDisable()
-    {
-        eventHandler.OnFinish -= Exit;
+        if (Input.GetKeyDown(KeyCode.C) && !isOnBoard)
+        {
+            anim.Play("DiverWalkToDivingBoard");
+            isOnBoard = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.R) && anim.GetCurrentAnimatorStateInfo(0).IsName("DiverWalkToDivingBoard"))
+        {
+            anim.Play("DiverRunOnDivingBoard");
+            isOnBoard = false;
+        }
     }
 }
