@@ -2,34 +2,65 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("UI References")]
+    public TextMeshProUGUI scoreText;
+
+    [Header("Diver References")]
     public GameObject diver;
-    private Animator anim;
-    private bool isOnBoard = false;
+    public AnimationHandler diverAnim;
+    
+    [Header("Wave Reference")]
+    public Wave wave;
+
+    [Header("ThrowDiver Reference")]
+    public ThrowDiver throwDiver;
+
+    private Animator animator;
+    private int score = 0;
 
     void Awake()
     {
-        anim = diver.GetComponent<Animator>();
+        diverAnim = gameObject.GetComponent<AnimationHandler>();
+        animator = diver.GetComponent<Animator>();
+        diverAnim.UpdateAnimClipTimes(animator);
     }
 
     void Update()
     {
-        AnimationHandler();
+        diverAnim.ControlAnimation(animator);
+
+        if (Input.anyKeyDown)
+        {
+            string input = Input.inputString;
+            char key = input[0];
+            if (key == 'A')
+                wave.IncreaseAmp();
+            if (key == 'a')
+                wave.DecreaseAmp();
+            if (key == 'L')
+                wave.IncreaseWaveLength();
+            if (key == 'l')
+                wave.DecreaseWaveLength();
+            if (key == 'V')
+                wave.IncreaseSpeedOfDecay();
+            if (key == 'v')
+                wave.DecreaseSpeedOfDecay();
+            if (key == 'T')
+                throwDiver.IncreaseThrowForce();
+            if (key == 't')
+                throwDiver.DecreaseThrowForce();
+
+        }
     }
 
-    private void AnimationHandler()
+    public void UpdateScore()
     {
-        if (Input.GetKeyDown(KeyCode.C) && !isOnBoard)
-        {
-            anim.Play("DiverWalkToDivingBoard");
-            isOnBoard = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.R) && anim.GetCurrentAnimatorStateInfo(0).IsName("DiverWalkToDivingBoard"))
-        {
-            anim.Play("DiverRunOnDivingBoard");
-            isOnBoard = false;
-        }
+        ++score;
+        scoreText.text = "Score: " + score;
     }
 }
