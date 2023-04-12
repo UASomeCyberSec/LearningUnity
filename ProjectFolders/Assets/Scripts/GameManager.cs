@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     [Header("ThrowDiver Reference")]
     public ThrowDiver throwDiver;
 
+    [Header("Water Collision Handler Reference")]
+    public WaterCollisionHandler collisionHandler;
+
     private Animator animator;
     private int score = 0;
 

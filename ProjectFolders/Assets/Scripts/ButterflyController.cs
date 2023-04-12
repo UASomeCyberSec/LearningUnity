@@ -3,7 +3,7 @@ using UnityEngine;
 public class ButterflyController : MonoBehaviour
 {
     public ButterflyFlockController flockController;
-    public float moveSpeed = 2f;
+    public float moveSpeed = 4f;
     public float rotationSpeed = 4f;
 
     private Rigidbody rb;
@@ -15,7 +15,7 @@ public class ButterflyController : MonoBehaviour
 
     public void UpdateButterfly()
     {
-        Vector3 cohesion = ComputeCohesion();
+        Vector3 cohesion = ComputeCohesion() * 2f; // Increase the weight of cohesion
         Vector3 separation = ComputeSeparation();
         Vector3 alignment = ComputeAlignment();
 
@@ -31,8 +31,23 @@ public class ButterflyController : MonoBehaviour
     private Vector3 ComputeCohesion()
     {
         Vector3 center = flockController.transform.position;
-        return (center - transform.position).normalized;
+        Vector3 directionToCenter = (center - transform.position);
+        float distanceToCenter = directionToCenter.magnitude;
+
+        if (distanceToCenter > flockController.keepDistance)
+        {
+            return directionToCenter.normalized;
+        }
+        else if (distanceToCenter < flockController.keepDistance)
+        {
+            return -directionToCenter.normalized;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
     }
+
 
     private Vector3 ComputeSeparation()
     {
@@ -55,5 +70,10 @@ public class ButterflyController : MonoBehaviour
     {
         Vector3 alignment = flockController.transform.forward;
         return alignment;
+    }
+
+    public void StopMoving()
+    {
+        rb.velocity = Vector3.zero;
     }
 }

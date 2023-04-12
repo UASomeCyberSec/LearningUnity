@@ -7,6 +7,9 @@ public class AnimationHandler : MonoBehaviour
 {
     [Header("Wave Reset Reference")]
     public Wave callReset;
+
+    [Header("Water Collision Handler Reference")]
+    public WaterCollisionHandler collisionHandler;
     
     private ThrowDiver throwDiver;
     private bool isOnBoard = false;
@@ -32,6 +35,7 @@ public class AnimationHandler : MonoBehaviour
             isOnPoolLedge = false;
             endTime = walkTo + Time.time;
             callReset.ResetWave();
+            collisionHandler.ResetButterfly();
         }
         else if ((Input.GetKeyDown(KeyCode.R) && !isOnPoolLedge) && (Time.time > endTime))
         {

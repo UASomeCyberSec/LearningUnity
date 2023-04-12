@@ -4,9 +4,11 @@ using UnityEngine;
 public class ButterflyFlockController : MonoBehaviour
 {
     public GameObject butterflyPrefab;
-    public int flockSize = 10;
+    public int flockSize = 20;
     public float spawnRadius = 5f;
     public float separationDistance = 1f;
+    public float keepDistance = 3f;
+    public bool followPlayer = true;
 
     public List<ButterflyController> butterflies = new List<ButterflyController>();
 
@@ -26,9 +28,25 @@ public class ButterflyFlockController : MonoBehaviour
 
     void Update()
     {
-        foreach (var butterfly in butterflies)
+        if (followPlayer)
         {
-            butterfly.UpdateButterfly();
+            foreach (var butterfly in butterflies)
+                butterfly.UpdateButterfly();
         }
+        else
+        {
+            foreach (var butterfly in butterflies)
+                butterfly.StopMoving();
+        }
+    }
+
+    public void StopFollowPlayer()
+    {
+        followPlayer = false;
+    }
+
+    public void FollowPlayer()
+    {
+        followPlayer = true;
     }
 }
